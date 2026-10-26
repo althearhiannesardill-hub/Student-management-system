@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pink Student Management System</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fff0f6;
+    color: #702647;
+}
+
+header {
+    background: linear-gradient(135deg, #ec4899, #be185d);
+    color: white;
+    padding: 25px 20px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 25px;
+}
+
+header p {
+    margin: 0;
+    color: #ffe4ef;
+    font-size: 14px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1050px;
+    margin: 25px auto;
+    padding: 0 16px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card, .panel {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid #fbcfe8;
+    box-shadow: 0 4px 15px #be185d12;
+}
+
+.stat-card p {
+    margin: 0 0 10px;
+    color: #a04d70;
+    font-size: 14px;
+}
+
+.stat-card h2 {
+    margin: 0;
+    color: #db2777;
+    font-size: 28px;
+}
+
+.panel {
+    margin-bottom: 20px;
+}
+
+.panel h2 {
+    margin-top: 0;
+    font-size: 19px;
+    color: #9d174d;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #831843;
+}
+
+input, select {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #f3b4d0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fffafd;
+    color: #702647;
+}
+
+input:focus, select:focus {
+    outline: 2px solid #f9a8d4;
+    border-color: #ec4899;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 15px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    background: #db2777;
+    color: white;
+}
+
+.secondary {
+    background: #fce7f3;
+    color: #9d174d;
+}
+
+.edit {
+    background: #fbcfe8;
+    color: #9d174d;
+}
+
+.delete {
+    background: #ffe4e6;
+    color: #be123c;
+}
+
+.search {
+    margin-bottom: 15px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+th, td {
+    padding: 13px 10px;
+    text-align: left;
+    border-bottom: 1px solid #fce7f3;
+}
+
+th {
+    background: #fce7f3;
+    color: #9d174d;
+}
+
+tbody tr:hover {
+    background: #fff5fa;
+}
+
+.empty {
+    padding: 25px;
+    text-align: center;
+    color: #a04d70;
+}
+
+.row-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.row-actions button {
+    padding: 8px 10px;
+}
+
+footer {
+    text-align: center;
+    color: #a04d70;
+    font-size: 12px;
+    padding: 15px;
+}
+
+@media (max-width: 550px) {
+    header h1 {
+        font-size: 22px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        margin-top: 16px;
+    }
+
+    .panel, .stat-card {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Student Management System ♡</h1>
+    <p>Organize student information and academic records.</p>
+</header>
+
+<main class="container">
+
+    <section class="stats">
+        <div class="stat-card">
+            <p>Total Students</p>
+            <h2 id="totalStudents">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Available Courses</p>
+            <h2 id="totalCourses">0</h2>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2 id="formTitle">Add New Student</h2>
+
+        <form id="studentForm">
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="name">Full Name</label>
+                    <input id="name" required
+                        maxlength="100"
+                        placeholder="Enter full name">
+                </div>
+
+                <div class="field">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" required
+                        maxlength="150"
+                        placeholder="student@email.com">
+                </div>
+
+                <div class="field">
+                    <label for="course">Course</label>
+                    <select id="course" required>
+                        <option value="">Select course</option>
+                        <option>BS Information Technology</option>
+                        <option>BS Computer Science</option>
+                        <option>BS Business Administration</option>
+                        <option>BS Accountancy</option>
+                        <option>BS Psychology</option>
+                        <option>BS Education</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="year">Year Level</label>
+                    <select id="year" required>
+                        <option value="">Select year level</option>
+                        <option>1st Year</option>
+                        <option>2nd Year</option>
+                        <option>3rd Year</option>
+                        <option>4th Year</option>
+                        <option>5th Year</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button class="primary" type="submit"
+                    id="saveButton">Add Student</button>
+
+                <button class="secondary" type="button"
+                    id="cancelButton" hidden>Cancel Edit</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Student Records ♡</h2>
+
+        <input class="search" id="search"
+            type="search"
+            placeholder="Search by name, ID, email, or course..."
+            aria-label="Search student records">
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>Year</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentList"></tbody>
+            </table>
+        </div>
+
+        <p id="recordMessage" class="empty">
+            No student records yet. Add a student to begin.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    Student Management System | Made with ♥
+</footer>
+
+<script>
+const form = document.getElementById("studentForm");
+const studentList = document.getElementById("studentList");
+const search = document.getElementById("search");
+const recordMessage = document.getElementById("recordMessage");
+const saveButton = document.getElementById("saveButton");
+const cancelButton = document.getElementById("cancelButton");
+
+let students = [];
+let editingId = null;
+let nextNumber = 1001;
+
+// Load saved student records.
+try {
+    const saved = localStorage.getItem("studentRecords");
+    const savedNumber = localStorage.getItem("nextStudentNumber");
+
+    if (saved) {
+        const parsed = JSON.parse(saved);
+
+        if (Array.isArray(parsed)) {
+            students = parsed.filter(s =>
+                s &&
+                typeof s.id === "string" &&
+                typeof s.studentId === "string" &&
+                typeof s.name === "string" &&
+                typeof s.email === "string" &&
+                typeof s.course === "string" &&
+                typeof s.year === "string"
+            );
+        }
+    }
+
+    if (savedNumber &&
+        Number.isSafeInteger(Number(savedNumber)) &&
+        Number(savedNumber) >= 1001) {
+        nextNumber = Number(savedNumber);
+    }
+
+    students.forEach(student => {
+        const match = student.studentId.match(/^STU-(\d+)$/);
+
+        if (match) {
+            nextNumber = Math.max(
+                nextNumber,
+                Number(match[1]) + 1
+            );
+        }
+    });
+} catch (error) {
+    students = [];
+}
+
+function saveData() {
+    try {
+        localStorage.setItem(
+            "studentRecords",
+            JSON.stringify(students)
+        );
+
+        localStorage.setItem(
+            "nextStudentNumber",
+            String(nextNumber)
+        );
+
+        return true;
+    } catch (error) {
+        alert("Could not save data in this browser.");
+        return false;
+    }
+}
+
+function makeId() {
+    return Date.now().toString(36) +
+        Math.random().toString(36).slice(2);
+}
+
+function createCell(value) {
+    const cell = document.createElement("td");
+    cell.textContent = value;
+    return cell;
+}
+
+function renderStudents() {
+    const query = search.value.trim().toLowerCase();
+
+    const filtered = students.filter(student =>
+        [
+            student.studentId,
+            student.name,
+            student.email,
+            student.course,
+            student.year
+        ].some(value => value.toLowerCase().includes(query))
+    );
+
+    document.getElementById("totalStudents").textContent =
+        students.length;
+
+    document.getElementById("totalCourses").textContent =
+        new Set(students.map(s => s.course)).size;
+
+    studentList.replaceChildren();
+
+    filtered.forEach(student => {
+        const row = document.createElement("tr");
+
+        row.append(
+            createCell(student.studentId),
+            createCell(student.name),
+            createCell(student.email),
+            createCell(student.course),
+            createCell(student.year)
+        );
+
+        const actionCell = document.createElement("td");
+        const actionGroup = document.createElement("div");
+        actionGroup.className = "row-actions";
+
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.className = "edit";
+        editButton.textContent = "Edit";
+        editButton.dataset.action = "edit";
+        editButton.dataset.id = student.id;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "delete";
+        deleteButton.textContent = "Delete";
+        deleteButton.dataset.action = "delete";
+        deleteButton.dataset.id = student.id;
+
+        actionGroup.append(editButton, deleteButton);
+        actionCell.append(actionGroup);
+        row.append(actionCell);
+        studentList.append(row);
+    });
+
+    if (filtered.length === 0) {
+        recordMessage.hidden = false;
+        recordMessage.textContent = students.length === 0
+            ? "No student records yet. Add a student to begin."
+            : "No matching student records found.";
+    } else {
+        recordMessage.hidden = true;
+    }
+}
+
+function resetForm() {
+    form.reset();
+    editingId = null;
+
+    document.getElementById("formTitle").textContent =
+        "Add New Student";
+
+    saveButton.textContent = "Add Student";
+    cancelButton.hidden = true;
+}
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const course = document.getElementById("course").value;
+    const year = document.getElementById("year").value;
+
+    if (!name || !email || !course || !year) {
+        alert("Please complete all fields.");
+        return;
+    }
+
+    const emailInput = document.getElementById("email");
+
+    if (!emailInput.checkValidity()) {
+        alert("Please enter a valid email address.");
+        emailInput.focus();
+        return;
+    }
+
+    let updatedStudents;
+
+    if (editingId !== null) {
+        updatedStudents = students.map(student =>
+            student.id === editingId
+                ? { ...student, name, email, course, year }
+                : student
+        );
+    } else {
+        const newStudent = {
+            id: makeId(),
+            studentId: "STU-" + nextNumber,
+            name,
+            email,
+            course,
+            year
+        };
+
+        updatedStudents = [...students, newStudent];
+    }
+
+    const previousStudents = students;
+    const previousNumber = nextNumber;
+    const isAdding = editingId === null;
+
+    students = updatedStudents;
+
+    if (isAdding) {
+        nextNumber++;
+    }
+
+    if (!saveData()) {
+        students = previousStudents;
+        nextNumber = previousNumber;
+        return;
+    }
+
+    alert(isAdding
+        ? "Student added successfully!"
+        : "Student updated successfully!");
+
+    resetForm();
+    renderStudents();
+});
+
+studentList.addEventListener("click", function(event) {
+    const button = event.target.closest("button[data-action]");
+
+    if (!button) return;
+
+    const student = students.find(
+        s => s.id === button.dataset.id
+    );
+
+    if (!student) return;
+
+    if (button.dataset.action === "edit") {
+        editingId = student.id;
+
+        document.getElementById("name").value = student.name;
+        document.getElementById("email").value = student.email;
+        document.getElementById("course").value = student.course;
+        document.getElementById("year").value = student.year;
+
+        document.getElementById("formTitle").textContent =
+            "Edit Student: " + student.studentId;
+
+        saveButton.textContent = "Save Changes";
+        cancelButton.hidden = false;
+
+        document.getElementById("name").focus();
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    if (button.dataset.action === "delete") {
+        const confirmed = confirm(
+            "Delete the record for " + student.name + "?"
+        );
+
+        if (!confirmed) return;
+
+        const previousStudents = students;
+
+        students = students.filter(
+            s => s.id !== student.id
+        );
+
+        if (!saveData()) {
+            students = previousStudents;
+            return;
+        }
+
+        if (editingId === student.id) {
+            resetForm();
+        }
+
+        renderStudents();
+    }
+});
+
+search.addEventListener("input", renderStudents);
+cancelButton.addEventListener("click", resetForm);
+
+renderStudents();
+</script>
+
+</body>
+</html>
